@@ -1,28 +1,58 @@
 const remark = require("remark");
+const remarkParser = require("remark-parse");
 const remarkImageAttributes = require("./index");
 
-const noAttributes = [
-  "![](https://image.com/123.png)",
-  "![imageAlt](https://image.com/123.png)",
-  '![imageAlt](https://image.com/123.png "imageTitle")'
-];
+const wrapInRoot = expectedNode => ({
+  type: "root",
+  children: [expectedNode]
+});
 
-const withAttributes = ["![](https://image.com/)"];
+const parse = input =>
+  remark()
+    .use(remarkParser, { position: false })
+    .use(remarkImageAttributes)
+    .parse(input);
 
 describe("remark-image-attributes", () => {
   it("ignores images without attributes", () => {
-    noAttributes.forEach(mdImage => {
-      const parsed = remark()
-        .use(remarkImageAttributes)
-        .processSync(mdImage);
-      console.log(parsed);
-    });
+    const parsed = parse("![imageAlt](https://image.com/123.png)");
+    expect(parsed.children[0].type).toBe("paragraph");
   });
-  it.only("finds images with urls", () => {
-    const parsed = remark()
-      .use(remarkImageAttributes)
-      .processSync("![imageAlt](https://image.com/123.png width=100,zoom=true)")
-      .toString();
-    console.log(parsed);
+
+  it("finds images with urls", () => {
+    const parsed = parse(
+      "![imageAlt](https://image.com/123.png width=100,box-shadow=0px 1px 10px)"
+    );
+    expect(parsed).toEqual(
+      wrapInRoot({
+        type: "image",
+        alt: "imageAlt",
+        title: "imageAlt",
+        url: "https://image.com/123.png",
+        attributes: {
+          width: "100",
+          "box-shadow": "0px 1px 10px"
+        }
+      })
+    );
   });
+
+  it("finds images with relative paths", () => {
+    const parsed = parse(
+      "![imageAlt](../images/foo-123.jpg width=200px,height=100px)"
+    );
+    expect(parsed).toEqual(
+      wrapInRoot({
+        type: "image",
+        alt: "imageAlt",
+        title: "imageAlt",
+        url: "../images/foo-123.jpg",
+        attributes: {
+          width: "200px",
+          height: "100px"
+        }
+      })
+    );
+  });
+
 });
