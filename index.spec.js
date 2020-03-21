@@ -55,4 +55,19 @@ describe("remark-image-attributes", () => {
     );
   });
 
+  it("finds images without alt string", () => {
+    const parsed = parse("![](../images/no_string.svg border-radius=9999px,border-color=#fff)");
+    expect(parsed).toEqual(
+      wrapInRoot({
+        type: "image",
+        alt: null,
+        title: null,
+        url: "../images/no_string.svg",
+        attributes: {
+          'border-radius': "9999px",
+          'border-color': "#fff"
+        }
+      })
+    );
+  });
 });

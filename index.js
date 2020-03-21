@@ -1,6 +1,6 @@
 module.exports = imageAttributes;
 
-const attributeImageExp = /^\!\[(.*)?\]\((.+?) ([\w\s\d()-=.,]+)\)/
+const attributeImageExp = /^\!\[(.*)?\]\((.+?) ([\w\s\d()-=.,#]+)\)/;
 
 function imageAttributes(options) {
   const startBlock = "![";
