@@ -1,5 +1,7 @@
 module.exports = imageAttributes;
 
+const attributeImageExp = /^\!\[(.*)?\]\((.+?) ([\w\s\d()-=.,]+)\)/
+
 function imageAttributes(options) {
   const startBlock = "![";
   const endBlock = ")";
@@ -56,7 +58,7 @@ function imageAttributes(options) {
 }
 
 function parseImageAttribute(imageWithAttributes) {
-  const parts = imageWithAttributes.match(/^\!\[(.*)?\]\((.+) ([\S=,]+)\)/);
+  const parts = imageWithAttributes.match(attributeImageExp);
   if (!parts) return;
 
   const alt = parts[1];
