@@ -56,7 +56,9 @@ describe("remark-image-attributes", () => {
   });
 
   it("finds images without alt string", () => {
-    const parsed = parse("![](../images/no_string.svg border-radius=9999px,border-color=#fff)");
+    const parsed = parse(
+      "![](../images/no_string.svg border-radius=9999px,border-color=#fff)"
+    );
     expect(parsed).toEqual(
       wrapInRoot({
         type: "image",
@@ -64,8 +66,43 @@ describe("remark-image-attributes", () => {
         title: null,
         url: "../images/no_string.svg",
         attributes: {
-          'border-radius': "9999px",
-          'border-color': "#fff"
+          "border-radius": "9999px",
+          "border-color": "#fff"
+        }
+      })
+    );
+  });
+
+  it("doesn't rely on image file extensions", () => {
+    const parsed = parse(
+      "![fromUrl](https://imgur.com/SXODL1L width=100px,background=#eaeaea)"
+    );
+    expect(parsed).toEqual(
+      wrapInRoot({
+        type: "image",
+        alt: "fromUrl",
+        title: "fromUrl",
+        url: "https://imgur.com/SXODL1L",
+        attributes: {
+          width: "100px",
+          background: "#eaeaea"
+        }
+      })
+    );
+  });
+
+  it("doesn't choke on ) being the last character", () => {
+    const parsed = parse(
+      "![rotated](~/images/rotated@myAlbum.tiff transform=rotate(-90 deg))"
+    );
+    expect(parsed).toEqual(
+      wrapInRoot({
+        type: "image",
+        alt: "rotated",
+        title: "rotated",
+        url: "~/images/rotated@myAlbum.tiff",
+        attributes: {
+          transform: "rotate(-90 deg)"
         }
       })
     );

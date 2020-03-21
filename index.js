@@ -29,12 +29,11 @@ function imageAttributes(options) {
   function imageAttributesTokenizer(eat, value) {
     if (!value.startsWith(startBlock)) return;
 
-    const endBlockPosition = value.indexOf(endBlock, startBlock.length);
+    const endBlockPosition = value.lastIndexOf(endBlock);
     if (endBlockPosition === -1) return;
 
     const endPosition = endBlockPosition + endBlock.length;
     const imageWithAttributes = value.slice(0, endPosition);
-
     const parsedImageAttributes = parseImageAttribute(imageWithAttributes);
 
     if (!parsedImageAttributes) return;
