@@ -107,4 +107,24 @@ describe("remark-image-attributes", () => {
       })
     );
   });
+
+  it("finds image urls with query parameters", () => {
+    const parsed = parse(
+      "![queryParams](https://images.pexels.com/photos/2090903/pexels-photo-2090903.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260 width=1260,height=740)"
+    );
+
+    expect(parsed).toEqual(
+      wrapInRoot({
+        type: "image",
+        alt: "queryParams",
+        title: "queryParams",
+        url:
+          "https://images.pexels.com/photos/2090903/pexels-photo-2090903.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+        attributes: {
+          width: "1260",
+          height: "740"
+        }
+      })
+    );
+  });
 });
