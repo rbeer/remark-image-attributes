@@ -78,6 +78,7 @@ function parseImageAttribute(imageWithAttributes) {
 
   return {
     alt: alt || null,
+    title: alt || null,
     url,
     attributes
   };
