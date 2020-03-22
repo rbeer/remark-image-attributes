@@ -1,62 +1,33 @@
-module.exports = imageAttributes;
+const attributeImageExp = /^\!\[(.*)?\]\((.+?) ([\w\s\d()-=.,#%]+)\)/;
+const fenceStart = "![";
+const fenceEnd = ")";
 
-const attributeImageExp = /^\!\[(.*)?\]\((.+?) ([\w\s\d()-=.,#]+)\)/;
+const inlineLocator = (value, fromIndex) => {
+  return value.indexOf(fenceStart, fromIndex);
+};
 
-function imageAttributes(options) {
-  const startBlock = "![";
-  const endBlock = ")";
-  const inlineMode = (options || {}).inlineMode || false;
+const imageAttributesTokenizer = (eat, value) => {
+  if (!value.startsWith(fenceStart)) return;
 
-  if (isRemarkParser(this.Parser)) {
-    const parser = this.Parser.prototype;
-    const tokenizers = inlineMode
-      ? parser.inlineTokenizers
-      : parser.blockTokenizers;
-    const methods = inlineMode ? parser.inlineMethods : parser.blockMethods;
+  const fenceEndPosition = value.lastIndexOf(fenceEnd);
+  if (fenceEndPosition === -1) return;
 
-    tokenizers.imageAttributes = imageAttributesTokenizer;
-    methods.splice(methods.indexOf("html"), 0, "imageAttributes");
-  }
-  if (isRemarkCompiler(this.Compiler)) {
-    const compiler = this.Compiler.prototype;
-    compiler.visitors.imageAttributes = imageAttributesCompiler;
-  }
+  const endPosition = fenceEndPosition + fenceEnd.length;
+  const imageWithAttributes = value.slice(0, endPosition);
+  const parsedImageAttributes = parseImageAttribute(imageWithAttributes);
 
-  function locator(value, fromIndex) {
-    return value.indexOf(startBlock, fromIndex);
-  }
+  if (!parsedImageAttributes) return;
 
-  function imageAttributesTokenizer(eat, value) {
-    if (!value.startsWith(startBlock)) return;
+  return eat(imageWithAttributes)({
+    type: "image",
+    ...parsedImageAttributes
+  });
+};
 
-    const endBlockPosition = value.lastIndexOf(endBlock);
-    if (endBlockPosition === -1) return;
+const imageAttributesCompiler = node =>
+  `${fenceStart}${node.alt || ""}](${node.url}${fenceEnd}`;
 
-    const endPosition = endBlockPosition + endBlock.length;
-    const imageWithAttributes = value.slice(0, endPosition);
-    const parsedImageAttributes = parseImageAttribute(imageWithAttributes);
-
-    if (!parsedImageAttributes) return;
-
-    return eat(imageWithAttributes)({
-      type: "image",
-      ...parsedImageAttributes
-    });
-  }
-  imageAttributesTokenizer.locator = locator;
-
-  function imageAttributesCompiler(node) {
-    const attributeKeys = Object.keys(node.attributes);
-    const attributesString = attributeKeys.reduce((attrsString, attrKey) => {
-      return `${attrsString},${attrKey}=${node.attributes[attrKey]}`;
-    }, "");
-    const alt = node.alt || "";
-    const title = node.title || "";
-    return `${startBlock}${alt}](${node.url}${endBlock}`;
-  }
-}
-
-function parseImageAttribute(imageWithAttributes) {
+const parseImageAttribute = imageWithAttributes => {
   const parts = imageWithAttributes.match(attributeImageExp);
   if (!parts) return;
 
@@ -81,18 +52,33 @@ function parseImageAttribute(imageWithAttributes) {
     url,
     attributes
   };
-}
+};
 
-function isRemarkParser(parser) {
-  return Boolean(
+const isRemarkParser = parser =>
+  Boolean(
     parser &&
       parser.prototype &&
       parser.prototype.inlineTokenizers &&
       parser.prototype.inlineTokenizers.break &&
       parser.prototype.inlineTokenizers.break.locator
   );
+
+const isRemarkCompiler = compiler => Boolean(compiler && compiler.prototype);
+
+function imageAttributes() {
+  if (isRemarkParser(this.Parser)) {
+    const parser = this.Parser.prototype;
+    const tokenizers = parser.inlineTokenizers;
+    const methods = parser.inlineMethods;
+
+    tokenizers.imageAttributes = imageAttributesTokenizer;
+    methods.splice(methods.indexOf("html"), 0, "imageAttributes");
+  }
+  if (isRemarkCompiler(this.Compiler)) {
+    this.Compiler.prototype.visitors.imageAttributes = imageAttributesCompiler;
+  }
+
+  imageAttributesTokenizer.locator = inlineLocator;
 }
 
-function isRemarkCompiler(compiler) {
-  return Boolean(compiler && compiler.prototype);
-}
+module.exports = imageAttributes;
