@@ -50,29 +50,31 @@ visit(markdownAST, "image", node => console.log(node));
 Get these 'image' type nodes:
 
 ```js
-{ type: 'image',
+{
+  type: 'image',
   alt: 'some oranges',
   title: 'some oranges',
   url: 'https://images.pexels.com/photos/2090903/pexels-photo-2090903.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260',
-  attributes: { width: '1260', height: '740' },
-{ type: 'image',
+  attributes: { width: '1260', height: '740' }
+},
+{
+  type: 'image',
   alt: null,
   title: null,
   url: 'https://images.pexels.com/photos/3104856/pexels-photo-3104856.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260',
-  attributes:
-   { 'box-shadow': '0 1px 5px 5px',
-     'border-radius': '50%',
-     'border-color': 'rgb(120,120,120)' },
-{ type: 'image',
+  attributes: {
+    'box-shadow': '0 1px 5px 5px',
+    'border-radius': '50%',
+    'border-color': 'rgb(120,120,120)'
+  }
+},
+{
+  type: 'image',
   alt: 'happy',
   title: 'happy',
   url: 'https://images.pexels.com/photos/2728493/pexels-photo-2728493.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
-  attributes: { width: '200px', float: 'right' },
-  position:
-   Position {
-     start: { line: 10, column: 206, offset: 634 },
-     end: { line: 10, column: 693, offset: 1121 },
-     indent: [] } }
+  attributes: { width: '200px', float: 'right' }
+}
 ```
 
 ## Caveats/ToDo
