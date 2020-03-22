@@ -1,4 +1,4 @@
-const attributeImageExp = /^\!\[(.*)?\]\((.+?) ([\w\s\d()-=.,;#%]+)\)/;
+const attributeImageExp = /^\!\[(.*)?\]\((.+?) (.+?\)?)\)/;
 const fenceStart = "![";
 const fenceEnd = ")";
 
@@ -29,6 +29,7 @@ const imageAttributesCompiler = node =>
 
 const parseImageAttribute = imageWithAttributes => {
   const parts = imageWithAttributes.match(attributeImageExp);
+
   if (!parts) return;
 
   const alt = parts[1];
