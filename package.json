@@ -1,13 +1,44 @@
 {
   "name": "remark-image-attributes",
-  "version": "1.0.0",
-  "main": "index.js",
+  "version": "0.1.0",
+  "main": "dist/index.js",
   "license": "MIT",
   "scripts": {
-    "test": "jest"
+    "build": "babel src --out-dir dist --ignore src/**/*.spec.js",
+    "prepare": "node-env NODE_ENV=production npm run build",
+    "example": "node ./example/example.js",
+    "test": "jest src/"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rbeer/remark-image-attribuges.git"
+  },
+  "engines": {
+    "node": ">=10.13.0"
+  },
+  "keywords": [
+    "remark",
+    "plugin",
+    "markdown",
+    "image",
+    "styles",
+    "attributes"
+  ],
+  "files": [
+    "README.md",
+    "LICENSE.md",
+    "yarn.lock",
+    "package.json",
+    "dist/"
+  ],
   "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "cross-env": "^7.0.2",
     "jest": "^25.1.0",
-    "remark": "^11.0.2"
+    "remark": "^11.0.2",
+    "to-vfile": "^6.1.0",
+    "unist-util-visit": "^2.0.2"
   }
 }
+
