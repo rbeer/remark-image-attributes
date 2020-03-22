@@ -1,4 +1,4 @@
-const attributeImageExp = /^\!\[(.*)?\]\((.+?) ([\w\s\d()-=.,#%]+)\)/;
+const attributeImageExp = /^\!\[(.*)?\]\((.+?) ([\w\s\d()-=.,;#%]+)\)/;
 const fenceStart = "![";
 const fenceEnd = ")";
 
@@ -37,7 +37,7 @@ const parseImageAttribute = imageWithAttributes => {
 
   if (!attributesString) return;
 
-  const attributes = attributesString.split(",").reduce((attrs, attr) => {
+  const attributes = attributesString.split(";").reduce((attrs, attr) => {
     const [key, val] = attr.split("=");
     if (!val || !key) return attrs;
     return {

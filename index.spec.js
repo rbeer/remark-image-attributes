@@ -22,7 +22,7 @@ describe("remark-image-attributes", () => {
 
   it("finds images with urls", () => {
     const parsed = parse(
-      "![imageAlt](https://image.com/123.png width=100,box-shadow=0px 1px 10px)"
+      "![imageAlt](https://image.com/123.png width=100;box-shadow=0px 1px 10px)"
     );
 
     visitWithExpectation(parsed, {
@@ -39,7 +39,7 @@ describe("remark-image-attributes", () => {
 
   it("finds images with relative paths", () => {
     const parsed = parse(
-      "![imageAlt](../images/foo-123.jpg width=200px,height=100px)"
+      "![imageAlt](../images/foo-123.jpg width=200px;height=100px)"
     );
     visitWithExpectation(parsed, {
       type: "image",
@@ -55,7 +55,7 @@ describe("remark-image-attributes", () => {
 
   it("finds images without alt string", () => {
     const parsed = parse(
-      "![](../images/no_string.svg border-radius=9999px,border-color=#fff)"
+      "![](../images/no_string.svg border-radius=9999px;border-color=#fff)"
     );
     visitWithExpectation(parsed, {
       type: "image",
@@ -71,7 +71,7 @@ describe("remark-image-attributes", () => {
 
   it("doesn't rely on image file extensions", () => {
     const parsed = parse(
-      "![fromUrl](https://imgur.com/SXODL1L width=100px,background=#eaeaea)"
+      "![fromUrl](https://imgur.com/SXODL1L width=100px;background=#eaeaea)"
     );
     visitWithExpectation(parsed, {
       type: "image",
@@ -102,7 +102,7 @@ describe("remark-image-attributes", () => {
 
   it("finds image urls with query parameters", () => {
     const parsed = parse(
-      "![queryParams](https://images.pexels.com/photos/2090903/pexels-photo-2090903.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260 width=1260,height=740)"
+      "![queryParams](https://images.pexels.com/photos/2090903/pexels-photo-2090903.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260 width=1260;height=740)"
     );
 
     visitWithExpectation(parsed, {
@@ -120,7 +120,7 @@ describe("remark-image-attributes", () => {
 
   it("doesn't trip over attribute pattern in URL", () => {
     const parsed =
-      "![](https://image.com/123.bmp?key=value,another=one width=100vh,foo=bar)";
+      "![](https://image.com/123.bmp?key=value;another=one width=100vh;foo=bar)";
 
     visitWithExpectation(parsed, {
       type: "image",
