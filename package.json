@@ -1,6 +1,7 @@
 {
   "name": "remark-image-attributes",
-  "version": "0.1.0",
+  "version": "0.1.1",
+  "author": "Raphael Beer <raphael.beer@protonmail.com",
   "main": "dist/index.js",
   "license": "MIT",
   "scripts": {
