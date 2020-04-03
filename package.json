@@ -1,6 +1,6 @@
 {
   "name": "remark-image-attributes",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "author": "Raphael Beer <raphael.beer@protonmail.com",
   "main": "./index.js",
   "license": "MIT",
@@ -30,4 +30,3 @@
     "unist-util-visit": "^2.0.2"
   }
 }
-
