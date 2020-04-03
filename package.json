@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "example": "node ./example/example.js",
-    "test": "jest src/"
+    "test": "jest ./"
   },
   "repository": {
     "type": "git",
