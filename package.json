@@ -2,10 +2,9 @@
   "name": "remark-image-attributes",
   "version": "0.1.2",
   "author": "Raphael Beer <raphael.beer@protonmail.com",
-  "main": "dist/index.js",
+  "main": "./index.js",
   "license": "MIT",
   "scripts": {
-    "build": "babel src --out-dir dist --ignore src/**/*.spec.js",
     "example": "node ./example/example.js",
     "test": "jest src/"
   },
@@ -14,7 +13,7 @@
     "url": "https://github.com/rbeer/remark-image-attributes.git"
   },
   "engines": {
-    "node": ">=10.13.0"
+    "node": ">=10.19.0"
   },
   "keywords": [
     "remark",
@@ -24,16 +23,7 @@
     "styles",
     "attributes"
   ],
-  "files": [
-    "README.md",
-    "LICENSE.md",
-    "yarn.lock",
-    "package.json",
-    "dist/"
-  ],
   "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.0",
     "jest": "^25.1.0",
     "remark": "^11.0.2",
     "to-vfile": "^6.1.0",
