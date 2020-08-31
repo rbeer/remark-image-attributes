@@ -1,6 +1,6 @@
 const attributeImageExp = /^\!\[(.*)?\]\((.+?)#(.+?\)?)\)/;
-const fenceStart = "![";
-const fenceEnd = ")";
+const fenceStart = '![';
+const fenceEnd = ')';
 
 const inlineLocator = (value, fromIndex) => {
   return value.indexOf(fenceStart, fromIndex);
@@ -19,13 +19,13 @@ const imageAttributesTokenizer = (eat, value) => {
   if (!parsedImageAttributes) return;
 
   return eat(imageWithAttributes)({
-    type: "image",
-    ...parsedImageAttributes,
+    type: 'image',
+    ...parsedImageAttributes
   });
 };
 
 const imageAttributesCompiler = (node) =>
-  `${fenceStart}${node.alt || ""}](${node.url}${fenceEnd}`;
+  `${fenceStart}${node.alt || ''}](${node.url}${fenceEnd}`;
 
 const parseImageAttribute = (imageWithAttributes) => {
   const [, alt, url, attributesString] =
@@ -33,12 +33,12 @@ const parseImageAttribute = (imageWithAttributes) => {
 
   if (!attributesString) return;
 
-  const attributes = attributesString.split(";").reduce((attrs, attr) => {
-    const [key, val] = attr.split("=");
+  const attributes = attributesString.split(';').reduce((attrs, attr) => {
+    const [key, val] = attr.split('=');
     if (!val || !key) return attrs;
     return {
       ...attrs,
-      [key]: val,
+      [key]: val
     };
   }, {});
 
@@ -46,7 +46,7 @@ const parseImageAttribute = (imageWithAttributes) => {
     alt: alt || null,
     title: alt || null,
     url,
-    attributes,
+    attributes
   };
 };
 
@@ -68,7 +68,7 @@ function imageAttributes() {
     const methods = parser.inlineMethods;
 
     tokenizers.imageAttributes = imageAttributesTokenizer;
-    methods.splice(methods.indexOf("html"), 0, "imageAttributes");
+    methods.splice(methods.indexOf('html'), 0, 'imageAttributes');
   }
   if (isRemarkCompiler(this.Compiler)) {
     this.Compiler.prototype.visitors.imageAttributes = imageAttributesCompiler;
