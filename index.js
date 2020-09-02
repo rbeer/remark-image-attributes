@@ -1,4 +1,4 @@
-const attributeImageExp = /^\!\[(.*)?\]\((.+?)#(.+?\)?)\)/;
+const attributeImageExp = /^\!\[(.*)?\]\((.+?)#(.+?)\)$/;
 const fenceStart = '![';
 const fenceEnd = ')';
 
@@ -9,7 +9,11 @@ const inlineLocator = (value, fromIndex) => {
 const imageAttributesTokenizer = (eat, value) => {
   if (!value.startsWith(fenceStart)) return;
 
-  const fenceEndPosition = value.lastIndexOf(fenceEnd);
+  const nextStart = value.indexOf(fenceStart, 1);
+  const fenceEndPosition = value.lastIndexOf(
+    fenceEnd,
+    nextStart !== -1 ? nextStart : undefined
+  );
   if (fenceEndPosition === -1) return;
 
   const endPosition = fenceEndPosition + fenceEnd.length;
@@ -24,10 +28,10 @@ const imageAttributesTokenizer = (eat, value) => {
   });
 };
 
-const imageAttributesCompiler = (node) =>
+const imageAttributesCompiler = node =>
   `${fenceStart}${node.alt || ''}](${node.url}${fenceEnd}`;
 
-const parseImageAttribute = (imageWithAttributes) => {
+const parseImageAttribute = imageWithAttributes => {
   const [, alt, url, attributesString] =
     imageWithAttributes.match(attributeImageExp) || [];
 
@@ -50,7 +54,7 @@ const parseImageAttribute = (imageWithAttributes) => {
   };
 };
 
-const isRemarkParser = (parser) =>
+const isRemarkParser = parser =>
   Boolean(
     parser &&
       parser.prototype &&
@@ -59,7 +63,7 @@ const isRemarkParser = (parser) =>
       parser.prototype.inlineTokenizers.break.locator
   );
 
-const isRemarkCompiler = (compiler) => Boolean(compiler && compiler.prototype);
+const isRemarkCompiler = compiler => Boolean(compiler && compiler.prototype);
 
 function imageAttributes() {
   if (isRemarkParser(this.Parser)) {
