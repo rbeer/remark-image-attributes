@@ -79,9 +79,9 @@ Get these 'image' type nodes:
 
 ## Caveats/ToDo
 
-- The plugin doesn't recognize the title syntax, rather copies the [alt] to the `title` field.
+- The plugin doesn't recognize the title syntax but rather copies the [alt] to the `title` field.
   ```md
-  ![altText](https://image.com/foo.png width=100)
+  ![altText](https://image.com/foo.png title)
   ```
   results in
   ```js
