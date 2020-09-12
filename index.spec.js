@@ -37,7 +37,8 @@ describe('remark-image-attributes', () => {
       attributes: {
         width: '100',
         'box-shadow': '0px 1px 10px'
-      }
+      },
+      inline: false
     });
   });
 
@@ -53,7 +54,8 @@ describe('remark-image-attributes', () => {
       attributes: {
         width: '200px',
         height: '100px'
-      }
+      },
+      inline: false
     });
   });
 
@@ -69,12 +71,13 @@ describe('remark-image-attributes', () => {
       attributes: {
         'border-radius': '9999px',
         'border-color': '#fff'
-      }
+      },
+      inline: false
     });
   });
 
-  it('finds inline images', () => {
-    const parsed = parse(
+  it('finds and flags inline images', () => {
+    let parsed = parse(
       'This is a paragraph with an inline ![](../images/no_string.svg#border-radius=9999px;border-color=#fff;filter=rotate(42deg) foo(bar) baz(3.2px)) image'
     );
     visitWithExpectation(parsed, {
@@ -86,8 +89,22 @@ describe('remark-image-attributes', () => {
         'border-radius': '9999px',
         'border-color': '#fff',
         filter: 'rotate(42deg) foo(bar) baz(3.2px)'
-      }
+      },
+      inline: true
     });
+
+    //parsed = parse(
+    //'Paragraphs with inline image ![happy](https://images.pexels.com/photos/2728493/pexels-photo-2728493.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940#width=200px;float=right) and another set of (parentheses) work.'
+    //);
+    //visitWithExpectation(parsed, {
+    //type: 'image',
+    //alt: 'happy',
+    //title: 'happy',
+    //url:
+    //'https://images.pexels.com/photos/2728493/pexels-photo-2728493.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
+    //attributes: { width: '200px', float: 'right' },
+    //inline: true
+    //});
   });
 
   it('finds multiple inline images', () => {
@@ -104,7 +121,8 @@ describe('remark-image-attributes', () => {
           'border-radius': '9999px',
           'border-color': '#fff',
           filter: 'rotate(42deg) foo(bar) baz(3.2px)'
-        }
+        },
+        inline: true
       },
       {
         type: 'image',
@@ -114,7 +132,8 @@ describe('remark-image-attributes', () => {
         attributes: {
           'border-radius': '99px',
           'border-color': '#000'
-        }
+        },
+        inline: true
       },
       {
         type: 'image',
@@ -137,7 +156,8 @@ describe('remark-image-attributes', () => {
       attributes: {
         width: '100px',
         background: '#eaeaea'
-      }
+      },
+      inline: false
     });
   });
 
@@ -152,7 +172,8 @@ describe('remark-image-attributes', () => {
       url: '~/images/rotated@myAlbum.tiff',
       attributes: {
         transform: 'rotate(-90 deg)'
-      }
+      },
+      inline: false
     });
   });
 
@@ -169,7 +190,8 @@ describe('remark-image-attributes', () => {
         filter:
           'hue-rotate(-282deg) brightness(1.5) drop-shadow(2px 4px 6px black)',
         width: '100px'
-      }
+      },
+      inline: false
     });
   });
 
@@ -186,7 +208,8 @@ describe('remark-image-attributes', () => {
         attributes: {
           key: 'value with spaces',
           width: '10px'
-        }
+        },
+        inline: true
       },
       {
         type: 'image',
@@ -196,7 +219,8 @@ describe('remark-image-attributes', () => {
         attributes: {
           key: 'value with spaces',
           width: '10px'
-        }
+        },
+        inline: true
       },
       {
         type: 'image',
@@ -206,7 +230,8 @@ describe('remark-image-attributes', () => {
         attributes: {
           key: 'value with spaces',
           width: '10px'
-        }
+        },
+        inline: true
       }
     ]);
   });
@@ -225,7 +250,8 @@ describe('remark-image-attributes', () => {
       attributes: {
         width: '1260',
         height: '740'
-      }
+      },
+      inline: false
     });
   });
 
@@ -241,7 +267,8 @@ describe('remark-image-attributes', () => {
       attributes: {
         width: '100px',
         foo: 'bar'
-      }
+      },
+      inline: false
     });
   });
 });

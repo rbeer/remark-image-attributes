@@ -6,30 +6,32 @@ const inlineLocator = (value, fromIndex) => {
   return value.indexOf(fenceStart, fromIndex);
 };
 
-const imageAttributesTokenizer = (eat, value) => {
-  if (!value.startsWith(fenceStart)) return;
+const imageAttributesTokenizer = (eat, value, silent) => {
+  if (!value.startsWith(fenceStart)) return false;
 
   const nextStart = value.indexOf(fenceStart, 1);
   const fenceEndPosition = value.lastIndexOf(
     fenceEnd,
     nextStart !== -1 ? nextStart : undefined
   );
-  if (fenceEndPosition === -1) return;
+  if (fenceEndPosition === -1) return false;
 
   const endPosition = fenceEndPosition + fenceEnd.length;
   const imageWithAttributes = value.slice(0, endPosition);
   const parsedImageAttributes = parseImageAttribute(imageWithAttributes);
 
-  if (!parsedImageAttributes) return;
+  if (!parsedImageAttributes) return false;
+  if (silent) return true;
 
-  return eat(imageWithAttributes)({
+  const node = eat(imageWithAttributes)({
     type: 'image',
     ...parsedImageAttributes
   });
-};
 
-const imageAttributesCompiler = node =>
-  `${fenceStart}${node.alt || ''}](${node.url}${fenceEnd}`;
+  node.inline = endPosition !== value.length || node.position.start.column > 1;
+
+  return node;
+};
 
 const parseImageAttribute = imageWithAttributes => {
   const [, alt, url, attributesString] =
@@ -53,6 +55,9 @@ const parseImageAttribute = imageWithAttributes => {
     attributes
   };
 };
+
+const imageAttributesCompiler = node =>
+  `${fenceStart}${node.alt || ''}](${node.url}${fenceEnd}`;
 
 const isRemarkParser = parser =>
   Boolean(

@@ -1,6 +1,19 @@
 # remark-image-attributes
 
-Parses markdown for images with attributes and puts those attributes on an `image` markdownAST node in the field `attributes`. Since this parser has been written to feed styles to [gatsby-remark-image-attributes](https://github.com/rbeer/gatsby-remark-image-attributes.git), the examples revolve around CSS-styles; yet the parser does not care about the keys nor values, as long as the `key=value;` format is met.
+Parses markdown for images with attributes (lead by a `#`) and puts those attributes on a mdAST `image` node with key `attributes` and value of type `Object.<string,string>`.
+
+The returned nodes also have an `inline` flag.
+
+```js
+{
+  type: 'image',
+  ...
+  attributes: { border: '3px dashed blue', cursor: 'pointer'},
+  inline: false
+}
+```
+
+Since this parser has been written to feed styles to [gatsby-remark-image-attributes](https://github.com/rbeer/gatsby-remark-image-attributes.git), the examples revolve around CSS properties; yet the parser does not care about the keys nor values, as long as the `key=value;` format is met.
 
 ## Installation
 
@@ -55,7 +68,8 @@ Get these 'image' type nodes:
   alt: 'some oranges',
   title: 'some oranges',
   url: 'https://images.pexels.com/photos/2090903/pexels-photo-2090903.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260',
-  attributes: { width: '1260', height: '740' }
+  attributes: { width: '1260', height: '740' },
+  inline: false
 },
 {
   type: 'image',
@@ -66,29 +80,35 @@ Get these 'image' type nodes:
     'box-shadow': '0 1px 5px 5px',
     'border-radius': '50%',
     'border-color': 'rgb(120,120,120)'
-  }
+  },
+  inline: false
 },
 {
   type: 'image',
   alt: 'happy',
   title: 'happy',
   url: 'https://images.pexels.com/photos/2728493/pexels-photo-2728493.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
-  attributes: { width: '200px', float: 'right' }
+  attributes: { width: '200px', float: 'right' },
+  inline: true
 }
 ```
 
-## Caveats/ToDo
+## Caveats
 
-- The plugin doesn't recognize the title syntax but rather copies the [alt] to the `title` field.
+- The plugin doesn't recognize the title syntax but rather copies the [altText] to the `title` field.
+
+  _**Beware:**_ '\<space>title' will become part of the last attribute!
   ```md
-  ![altText](https://image.com/foo.png title)
+  ![altText](https://image.com/foo.png#attribute=yes title)
   ```
   results in
   ```js
   {
     type: 'image',
-    ...,
     alt: 'altText',
-    title: 'altText'
+    title: 'altText',
+    url: 'https://image.com/foo.png',
+    attributes: { attribute: 'yes title' },
+    inline: false
   }
   ```
