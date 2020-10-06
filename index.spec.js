@@ -256,16 +256,17 @@ describe('remark-image-attributes', () => {
   });
 
   it("doesn't trip over attribute pattern in URL", () => {
-    const parsed =
-      '![](https://image.com/123.bmp?key=value;another=one#width=100vh;foo=bar)';
+    const parsed = parse(
+      '![](https://image.com/123.bmp?key=value;another=one#width=100vh;foo=bar)'
+    );
 
     visitWithExpectation(parsed, {
       type: 'image',
       alt: null,
       title: null,
-      url: 'https://image.com/123.bmp?key=value,another=one',
+      url: 'https://image.com/123.bmp?key=value;another=one',
       attributes: {
-        width: '100px',
+        width: '100vh',
         foo: 'bar'
       },
       inline: false
