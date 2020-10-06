@@ -272,4 +272,22 @@ describe('remark-image-attributes', () => {
       inline: false
     });
   });
+
+  // https://github.com/rbeer/gatsby-remark-image-attributes/issues/8
+  it('finds linking images', () => {
+    const parsed = parse(
+      '[![Example](./Example.png#pin-id=1;)](https://www.Example.com/)'
+    );
+
+    visitWithExpectation(parsed, {
+      type: 'image',
+      alt: 'Example',
+      title: 'Example',
+      url: './Example.png',
+      attributes: {
+        'pin-id': '1'
+      },
+      inline: true
+    });
+  });
 });
