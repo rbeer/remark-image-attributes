@@ -60,15 +60,9 @@ const imageAttributesCompiler = node =>
   `${fenceStart}${node.alt || ''}](${node.url}${fenceEnd}`;
 
 const isRemarkParser = parser =>
-  Boolean(
-    parser &&
-      parser.prototype &&
-      parser.prototype.inlineTokenizers &&
-      parser.prototype.inlineTokenizers.break &&
-      parser.prototype.inlineTokenizers.break.locator
-  );
+  Boolean(parser?.prototype?.inlineTokenizers?.break?.locator);
 
-const isRemarkCompiler = compiler => Boolean(compiler && compiler.prototype);
+const isRemarkCompiler = compiler => Boolean(compiler?.prototype?.visitors);
 
 function imageAttributes() {
   if (isRemarkParser(this.Parser)) {

@@ -15,7 +15,7 @@
     "url": "https://github.com/rbeer/remark-image-attributes.git"
   },
   "engines": {
-    "node": ">=10.19.0"
+    "node": ">=14.17.0"
   },
   "files": [
     "README.md",
@@ -33,7 +33,7 @@
   ],
   "devDependencies": {
     "jest": "^25.1.0",
-    "remark": "^11.0.2",
+    "remark": "^13.0.0",
     "to-vfile": "^6.1.0",
     "unist-util-visit": "^2.0.2"
   },
